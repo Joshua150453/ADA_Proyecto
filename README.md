@@ -26,27 +26,23 @@
             <tr>
                 <td colspan="2">
                     <table>
-                        <tr><td>ASIGNATURA:</td><td>Lenguaje de programación 3</td></tr>
-                        <tr><td>TÍTULO DEL TRABAJO:</td><td>Despliegue de GUI sin funcionalidad</td></tr>
+                        <tr><td>ASIGNATURA:</td><td>Analisis y diseño de algoritmos</td></tr>
+                        <tr><td>TÍTULO DEL TRABAJO:</td><td>Rúbrica de Evaluación – Carga Masiva + EDA en Python</td></tr>
                         <tr>
                             <td>NÚMERO DEL TRABAJO:</td><td>01</td>
-                            <td>AÑO:</td><td>2024</td>
-                            <td>NRO. SEMESTRE:</td><td>IV</td>
+                            <td>AÑO:</td><td>2025</td>
+                            <td>NRO. SEMESTRE:</td><td>V</td>
                         </tr>
                         <tr>
-                            <td colspan="6">DOCENTES:
+                            <td colspan="6">DOCENTE:
                                 <ul>
-                                    <li>Richart Smith Escobedo Quispe - rescobedoq@unsa.edu.pe</li>
+                                    <li>Edson Francisco Luque Mamani - rescobedoq@unsa.edu.pe</li>
                                 </ul>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="6">INTEGRANTES:
+                            <td colspan="6">INTEGRANTE:
                                 <ul>
-                                    <li>Mares Graos Frederick Dicarlo (100%)</li>
-                                    <li>Frontado Fajardo Abimael Ernesto (100%)</li>
-                                    <li>Gamio Huaman Christofer Alberto (100%)</li>
-                                    <li>Flores Leon Miguel Angel (100%)</li>
                                     <li>Ortiz Rosas Joshua David (100%)</li>
                                 </ul>
                             </td>
@@ -55,10 +51,6 @@
                 </td>
                 <td>
                     <table>
-                        <tr><td align="center">The Unity</td></tr>
-                        <tr><td style="border-top: 1px solid #000;"></td></tr>
-                        <tr><td align="center"><img src="unity.jpg" alt="Imagen del grupo" width="60px" height="40px"></td></tr>
-                    </table>
                 </td>
             </tr>
         </tbody>
