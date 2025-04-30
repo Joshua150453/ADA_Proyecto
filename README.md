@@ -62,25 +62,9 @@
 ## ÍNDICE
 
 - [Descripción general](#tablero-de-commits)
-- [OBJETIVOS, TEMAS Y MATERIALES DE APOYO](#objetivos-temas-y-materiales-de-apoyo)
-    - [OBJETIVOS](#objetivos)
-    - [Lenguaje y Motor](#lenguaje-y-motor)
-    - [MATERIAL DE APOYO](#material-de-apoyo)
-        - [Historia](#historia)
-        - [Resumen](#resumen)
-        - [Actualidad (5 años tras el abandono del “Cloudbuster”)](#actualidad-5-años-tras-el-abandono-del-cloudbuster)
-        - [Personajes](#personajes)
-            - [Protagonista](#protagonista)
-            - [Personajes Secundarios](#personajes-secundarios)
-        - [Ubicaciones](#ubicaciones)
-        - [Objetos](#objetos)
-    - [CONTENIDO DE LA GUÍA](#contenido-de-la-guía)
-        - [INSTALACIÓN DE UNITYHUB Y UNITY](#instalación-de-unityhub-y-unity)
-        - [ABRIENDO EL PROYECTO EN UNITY](#abriendo-el-proyecto-en-unity)
-- [PRUEBAS DE REUNIONES](#pruebas-de-reuniones)
-- [REFERENCIAS](#referencias)
+- [10 millones location_data](#10-millones-location_data)
 
-## Descripción
+## 1. Descripción
 Este proyecto analiza y visualiza el grafo de la red social 'X' a partir de un conjunto de datos de 10 millones de usuarios con sus conexiones y ubicaciones. El objetivo es descubrir patrones de conectividad y estructuras comunitarias mediante la construcción del grafo (usuarios como nodos, conexiones como aristas) y el análisis exploratorio de datos, incluyendo estadísticas básicas y visualizaciones. Se utilizarán los archivos de ubicación y usuarios proporcionados para este análisis en un entorno de programación.
 
 ## Materiales usados
@@ -175,7 +159,7 @@ limite = 10_000_000, se usa esta linea para determinar el limite de datos a leer
    for user_id in range(1, 21):  # De 1 a 10 ususarios
     print(f"{user_id}: {locations_dict[user_id][0]}, {locations_dict[user_id][1]}")
 
-### 10 millones users
+### 2. 10 millones users
 La función load_user_data_with_chunks_and_save_manual procesa un archivo de texto que contiene información sobre las conexiones entre usuarios de una red social, y guarda esta información en múltiples archivos "chunk" en formato pickle. El objetivo es manejar eficientemente grandes archivos de datos, dividiéndolos en partes más pequeñas para facilitar su procesamiento y almacenamiento. La función realiza las siguientes operaciones:
 - Lee el archivo de entrada: Lee el archivo de texto especificado, donde cada línea representa un usuario y sus conexiones.
 - Procesa cada línea: Convierte las conexiones de cada usuario a una lista de enteros, filtra conexiones inválidas (IDs no positivos, mayores al máximo ID, o iguales al propio ID del usuario) y limita el número de conexiones por usuario.
@@ -252,3 +236,64 @@ Se imprime un mensaje indicando que el procesamiento se ha completado, el númer
 - Si ocurre una excepción, se lanza una excepción RuntimeError con un mensaje de error descriptivo.
 ##### Funcion de carga;
 La función procesa el archivo de conexiones de usuarios, filtrando y limitando las conexiones de cada usuario. Guarda los datos en archivos chunk pickle para manejar grandes conjuntos de datos eficientemente.
+
+##### Cargar usuarios:
+La función get_user_connections recupera las conexiones de usuarios desde archivos "chunk" pickle, cargando los user_ids dados y optimizando la lectura de grandes conjuntos de datos.
+
+##### Verificación:
+Se verifican los datos cargados.
+
+### Análisis Exploratorio de Datos (EDA)
+Se lleva acabo la construcción del grafo, su visualización básica y datos de análisis extra.
+
+#### Importar Librerías:
+- sqlite3: Para interactuar con la base de datos SQLite.
+- pickle: Para serializar y deserializar objetos de Python (usado para guardar y cargar los "chunks" de datos de usuarios).
+- os: Para operaciones del sistema operativo, como trabajar con rutas de archivos y directorios.
+- networkx: Para crear, manipular y visualizar grafos.
+- matplotlib.pyplot: Para crear visualizaciones de grafos.
+
+#### Construir_grafo_desde_chunks_con_disco:
+- Propósito: Construye un grafo desde archivos de "chunk" que contienen datos de usuarios y los guarda en una base de datos SQLite.
+Cómo funciona:
+- Crea una conexión a una base de datos SQLite.
+- Crea tablas para almacenar nodos (usuarios) y aristas (conexiones).
+- Obtiene una lista de archivos "chunk".
+- Itera a través de cada archivo "chunk":
+- Carga el "chunk" usando pickle.load().
+- Itera a través de los usuarios y sus conexiones en el "chunk":
+Si el usuario tiene información de ubicación:
+- Inserta el usuario en la tabla de nodos (si no existe).
+- Itera a través de las conexiones del usuario:
+- Si el amigo también tiene ubicación, inserta la conexión como una arista en la tabla de aristas.
+- Confirma los cambios en la base de datos después de procesar cada "chunk".
+- Cierra la conexión a la base de datos.
+
+#### Dibujar_muestra_grafo_desde_db:
+- Propósito: Dibuja una muestra del grafo desde la base de datos SQLite.
+Cómo funciona:
+- Establece una conexión a la base de datos SQLite.
+- Obtiene una muestra de nodos (usuarios) de la tabla de nodos.
+- Crea un grafo dirigido usando networkx.
+- Añade nodos al grafo, utilizando la latitud y longitud como atributos de posición.
+- Obtiene las aristas (conexiones) de la tabla de aristas que conectan los nodos de la muestra.
+- Añade aristas al grafo.
+- Dibuja el grafo usando networkx y matplotlib.
+- Muestra el grafo dibujado.
+
+#### Mostrar_grafo_desde_sqlite:
+- Propósito: Muestra los primeros 100 nodos y las primeras 1000 aristas de la base de datos SQLite.
+Cómo funciona:
+- Se conecta a la base de datos SQLite.
+- Ejecuta consultas para seleccionar los primeros 100 nodos y las primeras 1000 aristas.
+- Imprime los resultados en un formato legible.
+- Cierra la conexión a la base de datos.
+
+#### Estadisticas_basicas:
+- Propósito: Calcula y muestra estadísticas básicas del grafo almacenado en la base de datos SQLite.
+Cómo funciona:
+- Se conecta a la base de datos SQLite.
+- Calcula el número de nodos y aristas usando consultas SQL.
+- Calcula el grado promedio y la densidad del grafo.
+- Imprime las estadísticas calculadas.
+- Cierra la conexión a la base de datos.
