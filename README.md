@@ -50,6 +50,7 @@
                     </table>
                 </td>
                 <td>
+                    </table>
                     <table>
                 </td>
             </tr>
