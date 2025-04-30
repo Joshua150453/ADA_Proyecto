@@ -9,12 +9,12 @@
         </tr>
     </thead>
     <tbody>
-        <tr><td colspan="3"><span style="font-weight:bold;">Formato</span>: Guía de Evidencia 4</td></tr>
+        <tr><td colspan="3"><span style="font-weight:bold;">Formato</span>: Avance 1</td></tr>
     </tbody>
 </table>
 
 <div align="center">
-    <span style="font-weight:bold;">GUÍA DE LA EVIDENCIA</span><br />
+    <span style="font-weight:bold;">GUÍA DEL AVANCE</span><br />
 </div>
 
 <div>
@@ -62,8 +62,9 @@
 ## ÍNDICE
 
 - [Descripción general](#tablero-de-commits)
-- [10 millones location_data](#10-millones-location_data)
-
+- [Procesamiento de datos](#Procesamiento-de-datos) 
+  - [10 millones location_data](#10-millones-location_data)
+  - - [10 millones users](#10-millones-users)
 ## 1. Descripción
 Este proyecto analiza y visualiza el grafo de la red social 'X' a partir de un conjunto de datos de 10 millones de usuarios con sus conexiones y ubicaciones. El objetivo es descubrir patrones de conectividad y estructuras comunitarias mediante la construcción del grafo (usuarios como nodos, conexiones como aristas) y el análisis exploratorio de datos, incluyendo estadísticas básicas y visualizaciones. Se utilizarán los archivos de ubicación y usuarios proporcionados para este análisis en un entorno de programación.
 
@@ -74,8 +75,8 @@ Este proyecto analiza y visualiza el grafo de la red social 'X' a partir de un c
 - os: Proporciona funciones para interactuar con el sistema operativo. Permite manipular archivos, directorios y ejecutar comandos del sistema. Esencial para la interacción con el entorno del sistema.
 - networkx: Crea, manipula y analiza grafos y redes complejas en Python. Ofrece herramientas para modelar relaciones y estudiar sus propiedades. Fundamental para el análisis de redes de diversos tipos.
 - matplotlib.pyplot: Módulo para crear visualizaciones estáticas, interactivas y animadas en Python. Genera gráficos de líneas, barras, dispersión y más. Herramienta clave para la exploración y presentación visual de datos.
-## Procesamiento de datos
-### 10 millones location_data
+## 2. Procesamiento de datos
+### 2.1. 10 millones location_data
 #### import os:
 - Propósito: Importa la librería os de Python.
 - Función: Esta librería proporciona funciones para interactuar con el sistema operativo, como trabajar con rutas de archivos y verificar si un archivo existe.
@@ -159,7 +160,7 @@ limite = 10_000_000, se usa esta linea para determinar el limite de datos a leer
    for user_id in range(1, 21):  # De 1 a 10 ususarios
     print(f"{user_id}: {locations_dict[user_id][0]}, {locations_dict[user_id][1]}")
 
-### 2. 10 millones users
+### 2.2. 10 millones users
 La función load_user_data_with_chunks_and_save_manual procesa un archivo de texto que contiene información sobre las conexiones entre usuarios de una red social, y guarda esta información en múltiples archivos "chunk" en formato pickle. El objetivo es manejar eficientemente grandes archivos de datos, dividiéndolos en partes más pequeñas para facilitar su procesamiento y almacenamiento. La función realiza las siguientes operaciones:
 - Lee el archivo de entrada: Lee el archivo de texto especificado, donde cada línea representa un usuario y sus conexiones.
 - Procesa cada línea: Convierte las conexiones de cada usuario a una lista de enteros, filtra conexiones inválidas (IDs no positivos, mayores al máximo ID, o iguales al propio ID del usuario) y limita el número de conexiones por usuario.
