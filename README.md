@@ -9,7 +9,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr><td colspan="3"><span style="font-weight:bold;">Formato</span>: Avance 1</td></tr>
+        <tr><td colspan="3"><span style="font-weight:bold;">Formato</span>: Avance Final</td></tr>
     </tbody>
 </table>
 
@@ -27,7 +27,7 @@
                 <td colspan="2">
                     <table>
                         <tr><td>ASIGNATURA:</td><td>Analisis y diseño de algoritmos</td></tr>
-                        <tr><td>TÍTULO DEL TRABAJO:</td><td>Rúbrica de Evaluación – Carga Masiva + EDA en Python</td></tr>
+                        <tr><td>TÍTULO DEL TRABAJO:</td><td>Rúbrica de Evaluación – Todo</td></tr>
                         <tr>
                             <td>NÚMERO DEL TRABAJO:</td><td>01</td>
                             <td>AÑO:</td><td>2025</td>
@@ -299,3 +299,76 @@ Cómo funciona:
 - Calcula el grado promedio y la densidad del grafo.
 - Imprime las estadísticas calculadas.
 - Cierra la conexión a la base de datos.
+
+### 2.4. Propiedades y Métricas de la Red
+#### 2.4.1. Detección de Comunidades
+La detección de comunidades es un pilar fundamental en el análisis de redes, pues permite identificar grupos de nodos (usuarios en tu caso) que están más densamente conectados entre sí que con el resto de la red. Estos grupos cohesivos, o comunidades, suelen revelar estructuras sociales, geográficas o temáticas subyacentes, proporcionando una comprensión más profunda de la organización interna de la red.
+
+Cómo se hace en el código:
+- Algoritmo de Girvan-Newman (Implementación Manual): Este proyecto empleó una implementación manual del algoritmo de Girvan-Newman, un método iterativo que se basa en la centralidad de intermediación.
+- Cálculo Iterativo de Centralidad de Intermediación: En cada iteración, el código determina la centralidad de intermediación para todas las aristas del grafo. Esta métrica cuantifica el grado en que una arista actúa como un puente fundamental en los caminos más cortos entre pares de nodos.
+- Remoción de Aristas Clave: La arista con el valor más elevado de centralidad de intermediación es sistemáticamente identificada y eliminada del grafo, ya que representa un enlace crítico entre potenciales comunidades.
+- Fragmentación y Re-cálculo: Tras la eliminación, las centralidades se recalculan para el grafo modificado. Este proceso iterativo conduce a la fragmentación progresiva del grafo en componentes conectados, cada uno de los cuales se consolida como una comunidad. El algoritmo prosigue hasta alcanzar un número predefinido de comunidades o hasta la disolución completa de la red.
+
+### 2.5. Análisis Avanzado
+#### 2.5.1. Análisis de Camino Más Corto
+El análisis de camino más corto constituye una métrica fundamental para evaluar la eficiencia y la fluidez con la que la información o cualquier tipo de interacción se propaga a través de una red. Esta propiedad es central para comprender el fenómeno de "mundo pequeño", donde los nodos están conectados por distancias relativas cortas.
+
+Proceso de Implementación en el Código:
+- Carga de una Muestra del Grafo: Para manejar la escala del conjunto de datos completo, el código inicia cargando una muestra representativa del grafo no ponderado desde la base de datos SQLite. Esta estrategia es esencial para permitir la ejecución de los algoritmos en un tiempo computacionalmente viable.
+- Selección de Nodos Origen: Se selecciona una sub-muestra aleatoria de nodos que servirán como puntos de partida para los cálculos de caminos más cortos, evitando la complejidad de procesar todos los posibles pares de nodos.
+- Ejecución de BFS (Implementación Manual): Por cada nodo origen seleccionado, se ejecuta una implementación manual del algoritmo de Búsqueda en Amplitud (BFS). BFS explora la red capa por capa, garantizando que la primera ruta descubierta hacia cualquier nodo sea la más corta en términos del número de aristas. Durante este proceso, se registran las distancias (número de pasos) desde el nodo origen hasta todos los nodos alcanzables.
+- Cálculo de la Longitud Promedio: Una vez obtenidas las distancias más cortas desde cada nodo origen de la muestra, estas se agregan y se promedian. El resultado es la longitud promedio del camino más corto de la red, una métrica clave que indica la cohesión general y la eficiencia en la conectividad del grafo.
+
+#### 2.5.2. Árboles de Expansión Mínima (MST)
+Los Árboles de Expansión Mínima (MST) proporcionan una perspectiva única sobre la conectividad más eficiente dentro de una red ponderada. Un MST es un subgrafo que interconecta todos los nodos de la red utilizando el menor peso total posible de aristas, sin generar ningún ciclo. En el contexto de esta red social, los "pesos" de las aristas corresponden a la distancia geográfica Haversine entre los usuarios, lo que permite transformar un problema de conectividad social en uno de eficiencia espacial.
+Proceso de Implementación en el Código:
+- Carga del Grafo Ponderado: El proceso comienza con la carga de una muestra del grafo desde la base de datos SQLite. Es fundamental que este grafo esté ponderado, es decir, que cada arista entre dos usuarios posea un valor asociado (su peso), que en este caso es la distancia Haversine previamente calculada entre sus coordenadas geográficas.
+- Inicialización del Algoritmo de Prim: La implementación manual del algoritmo de Prim se inicia seleccionando un nodo arbitrario de la muestra y agregándolo al conjunto de nodos que conforman el MST. El resto de los nodos se marcan como "no visitados".
+- Expansión Iterativa del Árbol (Implementación Manual de Prim): El algoritmo de Prim sigue un enfoque voraz (greedy). En cada paso, identifica y selecciona la arista de menor peso que conecta un nodo ya incluido en el MST con un nodo que aún no ha sido visitado. Esta arista se incorpora al MST, y el nuevo nodo se marca como visitado, expandiendo el árbol.
+- Finalización del Proceso: Este procedimiento iterativo continúa hasta que todos los nodos de la muestra inicial han sido incluidos en el MST. El resultado es un subgrafo que representa la conexión de todos los usuarios de la muestra con la distancia geográfica total mínima, ilustrando la "columna vertebral" más eficiente de la conectividad geográficamente determinada de la red.
+
+### 2.6. Visualización
+#### 2.6.1. Visualizaciones Interactivas
+Las visualizaciones interactivas son un componente crucial para transformar la complejidad de los datos y los resultados del análisis de grafos en representaciones comprensibles y explorables. Esta capacidad permite una comprensión intuitiva y dinámica de la estructura de la red, superando las limitaciones de los datos tabulares o los gráficos estáticos.
+
+Proceso de Implementación en el Código:
+- Carga de Datos de Ubicación y Conexiones: El código inicia la fase de visualización recuperando las coordenadas de latitud y longitud de una muestra de nodos, junto con la información de sus aristas conectadas, directamente desde la base de datos SQLite. La utilización de una muestra es fundamental para asegurar un rendimiento adecuado en la visualización interactiva.
+- Construcción de la Estructura para Plotly: Aunque la visualización final se realiza con Plotly, se emplea la librería networkx de manera auxiliar para construir un objeto networkx.Graph temporal. Este objeto se popula con los nodos y aristas de la muestra, y se enriquece al adjuntar las coordenadas geográficas (lat y lon) como atributos a cada nodo, lo que simplifica la preparación de los datos para Plotly.
+- Generación de Trazos Geoespaciales (Plotly): Utilizando las capacidades geoespaciales de Plotly, se generan dos tipos principales de "trazos" (go.Scattergeo):
+  - Un trazo para las aristas: representadas como líneas finas (mode='lines') que unen las coordenadas geográficas de los nodos conectados.
+  - Un trazo para los nodos: visualizados como marcadores (mode='markers') posicionados en sus respectivas ubicaciones geográficas.
+- Configuración y Renderización Interactiva: Se configura el diseño del mapa base (incluyendo el alcance global, y los colores de la tierra y los países) para proporcionar un contexto geográfico claro. Finalmente, se construye un objeto go.Figure que integra ambos trazos. Este objeto se convierte a formato HTML interactivo (fig.to_html) y se despliega directamente en el entorno de desarrollo (Google Colab, por ejemplo, mediante IPython.display.HTML). La interactividad inherente de Plotly permite a los usuarios realizar acciones como zoom, desplazamiento y, al posicionar el cursor sobre un nodo o arista, acceder a información detallada (como el ID del usuario), lo que enriquece significativamente la exploración de la densidad de conexiones y la distribución espacial de la red.
+
+#### 2.6.2. Visualización de Comunidades
+La visualización de comunidades representa una extensión del análisis interactivo, al integrar directamente los resultados de la detección de comunidades sobre el mapa geográfico. Esta integración permite una comprensión visual y espacial de cómo los grupos cohesivos se distribuyen dentro de la red, facilitando la interpretación de las estructuras sociales inherentes.
+Proceso de Implementación en el Código:
+- Carga del Grafo de Muestra: Similar al proceso de visualización general, el código comienza cargando una muestra representativa del grafo desde la base de datos SQLite. Esta muestra debe incluir tanto la información de las conexiones entre nodos como sus coordenadas geográficas.
+- Detección de Comunidades (Louvain para Eficiencia): Para esta fase de visualización, se opta por la función community.community_louvain.best_partition de la librería python-louvain. Esta elección se justifica por la alta eficiencia del algoritmo de Louvain en la detección rápida de comunidades en muestras de grafos grandes, lo cual es fundamental para una visualización fluida y responsiva. Este paso asigna una identificación de comunidad a cada nodo dentro de la muestra.
+- Asignación Dinámica de Colores: Una vez que cada nodo tiene asignada una comunidad, el código procede a utilizar una paleta de colores (por ejemplo, 'viridis' de matplotlib.cm) para generar un color único y distintivo para cada ID de comunidad. Este mapeo de colores asegura que las diferentes comunidades sean fácilmente distinguibles visualmente en el mapa interactivo.
+- Actualización y Renderización del Trazo de Nodos: El trazo de los nodos en Plotly (go.Scattergeo) se actualiza de manera crucial. El atributo marker=dict(color=...) de cada nodo se asigna dinámicamente al color correspondiente a su comunidad. Adicionalmente, se mejora la información emergente (hoverinfo='text') para que, al pasar el cursor sobre un nodo, se visualice no solo el ID del usuario, sino también el ID de la comunidad a la que pertenece. La figura de Plotly, ahora enriquecida con los nodos coloreados por comunidad, se renderiza como un archivo HTML interactivo y se despliega en el entorno. Esta representación visualmente potente permite a los usuarios no solo explorar la red geográficamente, sino también observar de manera inmediata cómo se agrupan los usuarios en distintas comunidades y cómo estas se distribuyen espacialmente, proporcionando una herramienta analítica y comunicativa de gran valor.
+
+### 2.7. Conclusión
+#### Resumen de hallazgos:
+- **Gestión Eficiente de Datos a Gran Escala:** La adopción de una estrategia de procesamiento por chunks y la persistencia del grafo en una base de datos SQLite fueron cruciales. Estas decisiones técnicas permitieron superar las limitaciones de memoria, procesar eficazmente los vastos volúmenes de nodos y aristas, y facilitar la consulta del grafo sin necesidad de gastar la totalidad de la memoria RAM.
+- **Identificación de Estructuras Comunitarias:** La implementación manual del algoritmo de Girvan-Newman, aplicado a una muestra representativa del grafo, posibilitó la identificación de comunidades o grupos cohesivos. Este hallazgo es fundamental para comprender la organización interna y la formación de clústeres sociales. La integración complementaria del algoritmo de Louvain para la visualización destacó la practicidad de emplear diversas herramientas según la fase del análisis.
+- **Evaluación de la Eficiencia de la Red:** El cálculo de la longitud promedio del camino más corto, utilizando el algoritmo BFS en una muestra, ofreció una perspectiva sobre la eficiencia de la comunicación o la propagación de información dentro de la red. Este resultado es vital para determinar si la red exhibe características de un "mundo pequeño".
+- **Optimización de la Conectividad Geográfica:** La construcción de un Árbol de Expansión Mínima (MST), ponderado por la distancia Haversine entre usuarios y calculado mediante la implementación del algoritmo de Prim, reveló la estructura de conectividad social más eficiente en términos de proximidad geográfica. Esto proporciona una visión única sobre cómo las conexiones pueden fortalecerse en función de la cercanía espacial.
+- **Visualización Interactiva:** Las representaciones visuales desarrolladas con Plotly, que superponen la estructura del grafo y las comunidades sobre un mapa geográfico interactivo, constituyen herramientas poderosas para explorar y comunicar los hallazgos de manera intuitiva y atractiva, facilitando la comprensión espacial de la red.
+
+#### Trabajo Futuro:
+- **Detección de Nodos Influyentes:** Ampliar el análisis mediante la implementación de métricas de centralidad adicionales (e.g., centralidad de grado, cercanía, PageRank) con el fin de identificar a los usuarios más influyentes o estratégicamente centrales dentro de la red.
+- **Mejora de la Escalabilidad de Algoritmos:** Para datasets de magnitud aún mayor, explorar la implementación de algoritmos de grafos en entornos distribuidos (e.g., Apache Spark GraphX, Dask-Graph) o la adopción de bases de datos de grafos especializadas (e.g., Neo4j, ArangoDB).
+- **Optimización de Visualizaciones**: Investigar técnicas de agregación de nodos o el uso de herramientas de visualización de grafos de alto rendimiento (e.g., Gephi) para manejar muestras de mayor tamaño y explorar diferentes aspectos visuales del grafo.
+- **Análisis de la Robustez de la Red:** Evaluar la resiliencia de la red frente a la eliminación aleatoria de nodos o aristas, así como ante ataques dirigidos, lo que es crucial para comprender su estabilidad y vulnerabilidad.
+
+### 2.8. Referencias
+*   SQLite.org. "SQLite Home Page." https://www.sqlite.org/
+*   NetworkX Developers. "NetworkX: Network analysis in Python." https://networkx.org/
+*   The Pandas Development Team. "Pandas: powerful Python data analysis toolkit." https://pandas.pydata.org/
+*   Harris, C.R., Millman, K.J., van der Walt, S.J. et al. "Array programming with NumPy." Nature 585, 357–362 (2020). https://numpy.org/
+*   Algoritmo de Brandes GeeksforGeeks: "Betweenness Centrality in Graph" https://www.geeksforgeeks.org/betweenness-centrality-centrality-measure/
+*   Algoritmo de Girvan-Newman (Detección de Comunidades) Towards Data Science (Medium) https://towardsdatascience.com/tag/community-detection/
+*   Algoritmo de Prim (Árbol de Expansión Mínima) Programiz: "Prim's Algorithm" https://www.programiz.com/dsa/prim-algorithm
+*   Algoritmo BFS (Búsqueda en Amplitud) GeeksforGeeks: "Breadth First Search (BFS) for a Graph" https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/
+*   Fórmula de Haversine GISGeography: "Haversine Formula" - https://community.esri.com/t5/coordinate-reference-systems-blog/distance-on-a-sphere-the-haversine-formula/ba-p/902128
