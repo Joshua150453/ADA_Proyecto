@@ -65,7 +65,14 @@
 - [Descripción general](#tablero-de-commits)
 - [Procesamiento de datos](#Procesamiento-de-datos) 
   - [10 millones location_data](#10-millones-location_data) 
+  - [10 millones users](#10-millones-users) 
   - [Análisis Exploratorio de Datos (EDA)](#Análisis-Exploratorio-de-Datos-(EDA))
+  - [Propiedades y Métricas de la Red](#Propiedades-y-Métricas-de-la-Red)
+  - [Propiedades y Métricas de la Red](#Propiedades-y-Métricas-de-la-Red) 
+  - [Análisis Avanzado](#Análisis-Avanzado)
+  - [Visualización](#Visualización)
+  - [Conclusión](#Conclusión)
+  - [Referencias](#Referencias) 
 ## 1. Descripción
 Este proyecto analiza y visualiza el grafo de la red social 'X' a partir de un conjunto de datos de 10 millones de usuarios con sus conexiones y ubicaciones. El objetivo es descubrir patrones de conectividad y estructuras comunitarias mediante la construcción del grafo (usuarios como nodos, conexiones como aristas) y el análisis exploratorio de datos, incluyendo estadísticas básicas y visualizaciones. Se utilizarán los archivos de ubicación y usuarios proporcionados para este análisis en un entorno de programación.
 
