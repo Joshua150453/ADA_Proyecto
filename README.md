@@ -126,7 +126,7 @@ Este proyecto analiza y visualiza el grafo de la red social 'X' a partir de un c
 **Salida del bucle:** Si se alcanza el límite, la instrucción break sale del bucle for, deteniendo la lectura del archivo.
 
 #### lat, lon = map(float, line.strip().split(',')):
-**Procesamiento de la línea:**
+#### **Procesamiento de la línea:**
 - **line.strip():** Elimina cualquier espacio en blanco al principio y al final de la línea.
 - **.split(','):** Divide la línea en una lista de cadenas utilizando la coma (,) como separador. Se espera que cada línea contenga dos valores separados por una coma (latitud y longitud).
 - **map(float, ...):** Aplica la función float() a cada elemento de la lista resultante, convirtiendo las cadenas a números de punto flotante.
@@ -150,7 +150,7 @@ Este proyecto analiza y visualiza el grafo de la red social 'X' a partir de un c
 - Si el archivo existe, se crea un diccionario vacío para almacenar los datos de ubicación.
 - Se abre el archivo para lectura.
 - Se lee el archivo línea por línea, manteniendo un registro del número de línea.
-**Para cada línea (hasta alcanzar el límite, si se proporcionó):**
+#### **Para cada línea (hasta alcanzar el límite, si se proporcionó):**
 - Se eliminan los espacios en blanco de la línea.
 - Se divide la línea en dos partes usando la coma como separador (esperando latitud y longitud).
 - Se convierten estas dos partes a números de punto flotante.
