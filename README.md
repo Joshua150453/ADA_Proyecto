@@ -77,71 +77,71 @@
 Este proyecto analiza y visualiza el grafo de la red social 'X' a partir de un conjunto de datos de 10 millones de usuarios con sus conexiones y ubicaciones. El objetivo es descubrir patrones de conectividad y estructuras comunitarias mediante la construcción del grafo (usuarios como nodos, conexiones como aristas) y el análisis exploratorio de datos, incluyendo estadísticas básicas y visualizaciones. Se utilizarán los archivos de ubicación y usuarios proporcionados para este análisis en un entorno de programación.
 
 ## Materiales usados
-- Google Collab: Entorno de ejecución
-- sqlite3: Permite interactuar con bases de datos SQLite directamente en Python. Facilita la creación, conexión y manipulación de bases de datos SQL sin un servidor externo. Ideal para almacenamiento local y estructurado de datos.
-- pickle: Serializa y deserializa objetos Python a un flujo de bytes. Permite guardar y cargar estructuras de datos complejas fácilmente. Útil para persistencia y transferencia de objetos Python.
-- os: Proporciona funciones para interactuar con el sistema operativo. Permite manipular archivos, directorios y ejecutar comandos del sistema. Esencial para la interacción con el entorno del sistema.
-- networkx: Crea, manipula y analiza grafos y redes complejas en Python. Ofrece herramientas para modelar relaciones y estudiar sus propiedades. Fundamental para el análisis de redes de diversos tipos.
-- matplotlib.pyplot: Módulo para crear visualizaciones estáticas, interactivas y animadas en Python. Genera gráficos de líneas, barras, dispersión y más. Herramienta clave para la exploración y presentación visual de datos.
+- **Google Collab:** Entorno de ejecución
+- **sqlite3:** Permite interactuar con bases de datos SQLite directamente en Python. Facilita la creación, conexión y manipulación de bases de datos SQL sin un servidor externo. Ideal para almacenamiento local y estructurado de datos.
+- **pickle:** Serializa y deserializa objetos Python a un flujo de bytes. Permite guardar y cargar estructuras de datos complejas fácilmente. Útil para persistencia y transferencia de objetos Python.
+- **os:** Proporciona funciones para interactuar con el sistema operativo. Permite manipular archivos, directorios y ejecutar comandos del sistema. Esencial para la interacción con el entorno del sistema.
+- **networkx:** Crea, manipula y analiza grafos y redes complejas en Python. Ofrece herramientas para modelar relaciones y estudiar sus propiedades. Fundamental para el análisis de redes de diversos tipos.
+- **matplotlib.pyplot:** Módulo para crear visualizaciones estáticas, interactivas y animadas en Python. Genera gráficos de líneas, barras, dispersión y más. Herramienta clave para la exploración y presentación visual de datos.
 ## 2. Procesamiento de datos
 ### 2.1. 10 millones location_data
 #### import os:
-- Propósito: Importa la librería os de Python.
-- Función: Esta librería proporciona funciones para interactuar con el sistema operativo, como trabajar con rutas de archivos y verificar si un archivo existe.
+- **Propósito:** Importa la librería os de Python.
+- **Función:** Esta librería proporciona funciones para interactuar con el sistema operativo, como trabajar con rutas de archivos y verificar si un archivo existe.
 
 #### def load_location_data(filename='10_million_location.txt', data_folder='/content/drive/MyDrive/data-ada', limit=None)::
-Definición de función: Define una función llamada load_location_data.
-Parámetros:
-- filename='10_million_location.txt': Define un parámetro llamado filename con un valor predeterminado de '10_million_location.txt'. Este parámetro espera el nombre del archivo que contiene los datos de ubicación.
-- data_folder='/content/drive/MyDrive/data-ada': Define un parámetro llamado data_folder con una ruta predeterminada. Este parámetro indica la carpeta donde se espera encontrar el archivo.
-- limit=None: Define un parámetro opcional llamado limit. Si se proporciona un número entero, la función dejará de leer el archivo después de procesar esa cantidad de líneas.
+**Definición de función:** Define una función llamada load_location_data.
+**Parámetros:**
+- **filename='10_million_location.txt':** Define un parámetro llamado filename con un valor predeterminado de '10_million_location.txt'. Este parámetro espera el nombre del archivo que contiene los datos de ubicación.
+- **data_folder='/content/drive/MyDrive/data-ada':** Define un parámetro llamado data_folder con una ruta predeterminada. Este parámetro indica la carpeta donde se espera encontrar el archivo.
+- **limit=None:** Define un parámetro opcional llamado limit. Si se proporciona un número entero, la función dejará de leer el archivo después de procesar esa cantidad de líneas.
 
 #### filepath = os.path.join(data_folder, filename):
-Construcción de la ruta: Utiliza la función os.path.join() para combinar la data_folder y el filename en una ruta de archivo completa. Esto asegura que la ruta sea válida independientemente del sistema operativo.
+**Construcción de la ruta:** Utiliza la función os.path.join() para combinar la data_folder y el filename en una ruta de archivo completa. Esto asegura que la ruta sea válida independientemente del sistema operativo.
 
 #### if not os.path.exists(filepath)::
-- Verificación de existencia: Utiliza la función os.path.exists() para verificar si el archivo especificado en filepath realmente existe.
-- Condición: Si el archivo no existe, la condición es verdadera.
+- **Verificación de existencia:** Utiliza la función os.path.exists() para verificar si el archivo especificado en filepath realmente existe.
+- **Condición:** Si el archivo no existe, la condición es verdadera.
 
 #### raise FileNotFoundError(f"El archivo {filename} no se encuentra en {os.path.abspath(filepath)}"):
-- Manejo de error: Si el archivo no existe, se lanza una excepción FileNotFoundError.
-- Mensaje de error: El mensaje de error incluye el nombre del archivo y la ruta absoluta donde se esperaba encontrarlo, lo que ayuda al usuario a identificar el problema.
+- **Manejo de error:** Si el archivo no existe, se lanza una excepción FileNotFoundError.
+- **Mensaje de error:** El mensaje de error incluye el nombre del archivo y la ruta absoluta donde se esperaba encontrarlo, lo que ayuda al usuario a identificar el problema.
 
 #### locations_dict = {}:
-- Inicialización de diccionario: Se crea un diccionario vacío llamado locations_dict. Este diccionario se utilizará para almacenar los datos de ubicación, donde las claves serán los IDs de usuario (basados en el número de línea) y los valores serán tuplas de (latitud, longitud).
+- **Inicialización de diccionario:** Se crea un diccionario vacío llamado locations_dict. Este diccionario se utilizará para almacenar los datos de ubicación, donde las claves serán los IDs de usuario (basados en el número de línea) y los valores serán tuplas de (latitud, longitud).
 
 #### with open(filepath, 'r') as file::
-- Apertura de archivo: Se abre el archivo especificado en filepath en modo lectura ('r').
-- with statement: El uso de with open(...) asegura que el archivo se cierre automáticamente después de que se termine de trabajar con él, incluso si ocurren errores. La variable file representa el objeto del archivo abierto.
+- **Apertura de archivo:** Se abre el archivo especificado en filepath en modo lectura ('r').
+- **with statement:** El uso de with open(...) asegura que el archivo se cierre automáticamente después de que se termine de trabajar con él, incluso si ocurren errores. La variable file representa el objeto del archivo abierto.
 
 #### for idx, line in enumerate(file)::
-- Iteración sobre líneas: Se inicia un bucle for para iterar sobre cada línea del archivo.
-- enumerate(): La función enumerate() devuelve tanto el índice (idx) de la línea (comenzando desde 0) como el contenido de la línea (line).
+- **Iteración sobre líneas:** Se inicia un bucle for para iterar sobre cada línea del archivo.
+- **enumerate():** La función enumerate() devuelve tanto el índice (idx) de la línea (comenzando desde 0) como el contenido de la línea (line).
 
 #### if limit and idx >= limit::
-- Verificación de límite: Se verifica si se proporcionó un valor para limit (es decir, limit no es None) y si el índice actual de la línea (idx) es mayor o igual al límite.
-- Condición de parada: Si ambas condiciones son verdaderas, significa que se ha leído la cantidad de líneas especificada por el limit.
+- **Verificación de límite:** Se verifica si se proporcionó un valor para limit (es decir, limit no es None) y si el índice actual de la línea (idx) es mayor o igual al límite.
+- **Condición de parada:** Si ambas condiciones son verdaderas, significa que se ha leído la cantidad de líneas especificada por el limit.
 
 #### break:
-Salida del bucle: Si se alcanza el límite, la instrucción break sale del bucle for, deteniendo la lectura del archivo.
+**Salida del bucle:** Si se alcanza el límite, la instrucción break sale del bucle for, deteniendo la lectura del archivo.
 
 #### lat, lon = map(float, line.strip().split(',')):
-Procesamiento de la línea:
-- line.strip(): Elimina cualquier espacio en blanco al principio y al final de la línea.
-- .split(','): Divide la línea en una lista de cadenas utilizando la coma (,) como separador. Se espera que cada línea contenga dos valores separados por una coma (latitud y longitud).
-- map(float, ...): Aplica la función float() a cada elemento de la lista resultante, convirtiendo las cadenas a números de punto flotante.
-- lat, lon = ...: Asigna los dos valores flotantes resultantes a las variables lat (latitud) y lon (longitud).
+**Procesamiento de la línea:**
+- **line.strip():** Elimina cualquier espacio en blanco al principio y al final de la línea.
+- **.split(','):** Divide la línea en una lista de cadenas utilizando la coma (,) como separador. Se espera que cada línea contenga dos valores separados por una coma (latitud y longitud).
+- **map(float, ...):** Aplica la función float() a cada elemento de la lista resultante, convirtiendo las cadenas a números de punto flotante.
+- **lat, lon = ...:** Asigna los dos valores flotantes resultantes a las variables lat (latitud) y lon (longitud).
 
 #### locations_dict[idx + 1] = (lat, lon):
-- Almacenamiento en el diccionario: Se agrega una nueva entrada al diccionario locations_dict. La clave es idx + 1 (se usa idx + 1 porque los IDs de usuario en la descripción del archivo comienzan en 1, mientras que los índices de enumerate comienzan en 0), y el valor es una tupla (lat, lon) que contiene las coordenadas de ubicación.
+- **Almacenamiento en el diccionario:** Se agrega una nueva entrada al diccionario locations_dict. La clave es idx + 1 (se usa idx + 1 porque los IDs de usuario en la descripción del archivo comienzan en 1, mientras que los índices de enumerate comienzan en 0), y el valor es una tupla (lat, lon) que contiene las coordenadas de ubicación.
 #### print(f"Datos de ubicaciones cargados exitosamente desde {filepath}"):
-- Mensaje de éxito: Después de leer el archivo (o alcanzar el límite), se imprime un mensaje indicando que los datos de ubicación se cargaron correctamente y desde qué archivo.
+- **Mensaje de éxito:** Después de leer el archivo (o alcanzar el límite), se imprime un mensaje indicando que los datos de ubicación se cargaron correctamente y desde qué archivo.
 
 #### print(f"Cargadas {len(locations_dict)} ubicaciones."):
-- Cantidad cargada: Se imprime la cantidad total de ubicaciones que se cargaron en el diccionario locations_dict.
+- **Cantidad cargada:** Se imprime la cantidad total de ubicaciones que se cargaron en el diccionario locations_dict.
 
 #### return locations_dict:
-- Retorno del diccionario: La función devuelve el diccionario locations_dict que contiene los datos de ubicación cargados.
+- **Retorno del diccionario:** La función devuelve el diccionario locations_dict que contiene los datos de ubicación cargados.
 
 #### Descripción del Flujo:
 - La función load_location_data se llama con el nombre del archivo de ubicación y la carpeta donde se encuentra (y opcionalmente un límite de líneas a leer).
@@ -150,7 +150,7 @@ Procesamiento de la línea:
 - Si el archivo existe, se crea un diccionario vacío para almacenar los datos de ubicación.
 - Se abre el archivo para lectura.
 - Se lee el archivo línea por línea, manteniendo un registro del número de línea.
-Para cada línea (hasta alcanzar el límite, si se proporcionó):
+**Para cada línea (hasta alcanzar el límite, si se proporcionó):**
 - Se eliminan los espacios en blanco de la línea.
 - Se divide la línea en dos partes usando la coma como separador (esperando latitud y longitud).
 - Se convierten estas dos partes a números de punto flotante.
@@ -164,17 +164,17 @@ limite = 10_000_000, se usa esta linea para determinar el limite de datos a leer
 
 #### Carga y verificación
 - locations_dict = load_location_data(limit = limite) # 22 segundos, se usa esta linea para realizar la carga de los datos, en total tarada 22 segundos a 30
--  Verificar: Finalmente se realiza una verificación de los datos.
-   for user_id in range(1, 21):  # De 1 a 10 ususarios
+-  **Verificar:** Finalmente se realiza una verificación de los datos.
+    for user_id in range(1, 21):  # De 1 a 10 ususarios
     print(f"{user_id}: {locations_dict[user_id][0]}, {locations_dict[user_id][1]}")
 
 ### 2.2. 10 millones users
 La función load_user_data_with_chunks_and_save_manual procesa un archivo de texto que contiene información sobre las conexiones entre usuarios de una red social, y guarda esta información en múltiples archivos "chunk" en formato pickle. El objetivo es manejar eficientemente grandes archivos de datos, dividiéndolos en partes más pequeñas para facilitar su procesamiento y almacenamiento. La función realiza las siguientes operaciones:
-- Lee el archivo de entrada: Lee el archivo de texto especificado, donde cada línea representa un usuario y sus conexiones.
-- Procesa cada línea: Convierte las conexiones de cada usuario a una lista de enteros, filtra conexiones inválidas (IDs no positivos, mayores al máximo ID, o iguales al propio ID del usuario) y limita el número de conexiones por usuario.
-- Crea chunks de datos: Agrupa los datos de los usuarios en "chunks" de un tamaño específico.
-- Guarda los chunks: Guarda cada chunk como un archivo pickle separado.
-- Maneja errores: Maneja errores de archivo y de procesamiento de líneas.
+- **Lee el archivo de entrada:** Lee el archivo de texto especificado, donde cada línea representa un usuario y sus conexiones.
+- **Procesa cada línea:** Convierte las conexiones de cada usuario a una lista de enteros, filtra conexiones inválidas (IDs no positivos, mayores al máximo ID, o iguales al propio ID del usuario) y limita el número de conexiones por usuario.
+- **Crea chunks de datos:** Agrupa los datos de los usuarios en "chunks" de un tamaño específico.
+- **Guarda los chunks:** Guarda cada chunk como un archivo pickle separado.
+- **Maneja errores:** Maneja errores de archivo y de procesamiento de líneas.
 
 #### Flujo de Ejecución:
 ##### Importar módulos:
@@ -183,10 +183,10 @@ La función load_user_data_with_chunks_and_save_manual procesa un archivo de tex
 
 ##### Definir la función load_user_data_with_chunks_and_save_manual:
 La función toma los siguientes parámetros:
-- filename: Nombre del archivo de entrada (por defecto: '10_million_user.txt').
-- data_folder: Carpeta donde se encuentra el archivo de entrada (por defecto: '/content/drive/MyDrive/data-ada').
-- output_folder: Carpeta donde se guardarán los archivos chunk (por defecto: '/content/drive/MyDrive/user_dict_chunks').
-- chunksize: Número de usuarios por chunk (por defecto: 100,000).
+- **filename:** Nombre del archivo de entrada (por defecto: '10_million_user.txt').
+- **data_folder:** Carpeta donde se encuentra el archivo de entrada (por defecto: '/content/drive/MyDrive/data-ada').
+- **output_folder:** Carpeta donde se guardarán los archivos chunk (por defecto: '/content/drive/MyDrive/user_dict_chunks').
+- **chunksize:** Número de usuarios por chunk (por defecto: 100,000).
 
 ##### Construir la ruta del archivo de entrada:
 Usa os.path.join para combinar la carpeta y el nombre del archivo para obtener la ruta completa al archivo de entrada.
@@ -200,20 +200,20 @@ Usa os.path.join para combinar la carpeta y el nombre del archivo para obtener l
 - Si el directorio no existe, se crea usando os.makedirs.
 
 ##### Inicializar variables:
-- max_id: Se establece el máximo ID de usuario permitido (10,000,000).
-- total_users: Contador para el número total de usuarios procesados (inicializado en 0).
-- chunk_count: Contador para el número de chunks guardados (inicializado en 0).
-- user_dict: Diccionario para almacenar los datos de los usuarios del chunk actual (inicializado como un diccionario vacío).
+- **max_id:** Se establece el máximo ID de usuario permitido (10,000,000).
+- **total_users:** Contador para el número total de usuarios procesados (inicializado en 0).
+- **chunk_count:** Contador para el número de chunks guardados (inicializado en 0).
+- **user_dict:** Diccionario para almacenar los datos de los usuarios del chunk actual (inicializado como un diccionario vacío).
 
 ##### Procesar el archivo de entrada línea por línea:
 - Se abre el archivo de entrada en modo lectura con codificación UTF-8.
 - Se itera sobre cada línea del archivo.
-Para cada línea:
+- **Para cada línea:**
 - Se intenta procesar la línea (dentro de un bloque try...except para manejar errores de formato):
 - Se eliminan los espacios en blanco de la línea y se divide en una lista de cadenas, asumiendo que las conexiones están separadas por comas.
 - Se convierte cada cadena a un entero usando map y int
 - Se calcula el ID del usuario actual (idx) como total_users + 1.
-- Se filtran las conexiones:
+**Se filtran las conexiones:**
 - Se eliminan las conexiones que no son positivas, que son mayores que max_id, o que son iguales al propio ID del usuario.
 - Se convierte el resultado a un conjunto (para eliminar duplicados) y luego a una lista.
 - Se trunca la lista de conexiones a max_connections_per_user conexiones.
@@ -222,7 +222,7 @@ Para cada línea:
 
 ##### Guardar chunks de usuarios:
 Dentro del bucle que procesa las líneas, se verifica si el número de usuarios procesados (total_users) es un múltiplo del tamaño del chunk (chunksize).
-Si es un múltiplo de chunksize:
+**Si es un múltiplo de chunksize:**
 - Se construye la ruta del archivo de salida para el chunk actual.
 - Se abre un archivo en modo escritura binaria ('wb').
 - Se serializa el diccionario user_dict usando pickle.dump y se guarda en el archivo.
@@ -256,22 +256,22 @@ Se verifican los datos cargados.
 Se lleva acabo la construcción del grafo, su visualización básica y datos de análisis extra.
 
 #### Importar Librerías:
-- sqlite3: Para interactuar con la base de datos SQLite.
-- pickle: Para serializar y deserializar objetos de Python (usado para guardar y cargar los "chunks" de datos de usuarios).
-- os: Para operaciones del sistema operativo, como trabajar con rutas de archivos y directorios.
-- networkx: Para crear, manipular y visualizar grafos.
-- matplotlib.pyplot: Para crear visualizaciones de grafos.
+- **sqlite3:** Para interactuar con la base de datos SQLite.
+- **pickle:** Para serializar y deserializar objetos de Python (usado para guardar y cargar los "chunks" de datos de usuarios).
+- **os:** Para operaciones del sistema operativo, como trabajar con rutas de archivos y directorios.
+- **networkx:** Para crear, manipular y visualizar grafos.
+- **matplotlib.pyplot:** Para crear visualizaciones de grafos.
 
 #### Construir_grafo_desde_chunks_con_disco:
-- Propósito: Construye un grafo desde archivos de "chunk" que contienen datos de usuarios y los guarda en una base de datos SQLite.
-Cómo funciona:
+- **Propósito:** Construye un grafo desde archivos de "chunk" que contienen datos de usuarios y los guarda en una base de datos SQLite.
+**Cómo funciona:**
 - Crea una conexión a una base de datos SQLite.
 - Crea tablas para almacenar nodos (usuarios) y aristas (conexiones).
 - Obtiene una lista de archivos "chunk".
 - Itera a través de cada archivo "chunk":
 - Carga el "chunk" usando pickle.load().
 - Itera a través de los usuarios y sus conexiones en el "chunk":
-Si el usuario tiene información de ubicación:
+**Si el usuario tiene información de ubicación:**
 - Inserta el usuario en la tabla de nodos (si no existe).
 - Itera a través de las conexiones del usuario:
 - Si el amigo también tiene ubicación, inserta la conexión como una arista en la tabla de aristas.
@@ -279,8 +279,8 @@ Si el usuario tiene información de ubicación:
 - Cierra la conexión a la base de datos.
 
 #### Dibujar_muestra_grafo_desde_db:
-- Propósito: Dibuja una muestra del grafo desde la base de datos SQLite.
-Cómo funciona:
+- **Propósito:** Dibuja una muestra del grafo desde la base de datos SQLite.
+**Cómo funciona:**
 - Establece una conexión a la base de datos SQLite.
 - Obtiene una muestra de nodos (usuarios) de la tabla de nodos.
 - Crea un grafo dirigido usando networkx.
@@ -291,16 +291,16 @@ Cómo funciona:
 - Muestra el grafo dibujado.
 
 #### Mostrar_grafo_desde_sqlite:
-- Propósito: Muestra los primeros 100 nodos y las primeras 1000 aristas de la base de datos SQLite.
-Cómo funciona:
+- **Propósito:** Muestra los primeros 100 nodos y las primeras 1000 aristas de la base de datos SQLite.
+**Cómo funciona:**
 - Se conecta a la base de datos SQLite.
 - Ejecuta consultas para seleccionar los primeros 100 nodos y las primeras 1000 aristas.
 - Imprime los resultados en un formato legible.
 - Cierra la conexión a la base de datos.
 
 #### Estadisticas_basicas:
-- Propósito: Calcula y muestra estadísticas básicas del grafo almacenado en la base de datos SQLite.
-Cómo funciona:
+- **Propósito:** Calcula y muestra estadísticas básicas del grafo almacenado en la base de datos SQLite.
+**Cómo funciona:**
 - Se conecta a la base de datos SQLite.
 - Calcula el número de nodos y aristas usando consultas SQL.
 - Calcula el grado promedio y la densidad del grafo.
@@ -311,49 +311,49 @@ Cómo funciona:
 #### 2.4.1. Detección de Comunidades
 La detección de comunidades es un pilar fundamental en el análisis de redes, pues permite identificar grupos de nodos (usuarios en tu caso) que están más densamente conectados entre sí que con el resto de la red. Estos grupos cohesivos, o comunidades, suelen revelar estructuras sociales, geográficas o temáticas subyacentes, proporcionando una comprensión más profunda de la organización interna de la red.
 
-Cómo se hace en el código:
-- Algoritmo de Girvan-Newman (Implementación Manual): Este proyecto empleó una implementación manual del algoritmo de Girvan-Newman, un método iterativo que se basa en la centralidad de intermediación.
-- Cálculo Iterativo de Centralidad de Intermediación: En cada iteración, el código determina la centralidad de intermediación para todas las aristas del grafo. Esta métrica cuantifica el grado en que una arista actúa como un puente fundamental en los caminos más cortos entre pares de nodos.
-- Remoción de Aristas Clave: La arista con el valor más elevado de centralidad de intermediación es sistemáticamente identificada y eliminada del grafo, ya que representa un enlace crítico entre potenciales comunidades.
-- Fragmentación y Re-cálculo: Tras la eliminación, las centralidades se recalculan para el grafo modificado. Este proceso iterativo conduce a la fragmentación progresiva del grafo en componentes conectados, cada uno de los cuales se consolida como una comunidad. El algoritmo prosigue hasta alcanzar un número predefinido de comunidades o hasta la disolución completa de la red.
+**Cómo se hace en el código:**
+- **Algoritmo de Girvan-Newman (Implementación Manual):** Este proyecto empleó una implementación manual del algoritmo de Girvan-Newman, un método iterativo que se basa en la centralidad de intermediación.
+- **Cálculo Iterativo de Centralidad de Intermediación:** En cada iteración, el código determina la centralidad de intermediación para todas las aristas del grafo. Esta métrica cuantifica el grado en que una arista actúa como un puente fundamental en los caminos más cortos entre pares de nodos.
+- **Remoción de Aristas Clave:** La arista con el valor más elevado de centralidad de intermediación es sistemáticamente identificada y eliminada del grafo, ya que representa un enlace crítico entre potenciales comunidades.
+- **Fragmentación y Re-cálculo:** Tras la eliminación, las centralidades se recalculan para el grafo modificado. Este proceso iterativo conduce a la fragmentación progresiva del grafo en componentes conectados, cada uno de los cuales se consolida como una comunidad. El algoritmo prosigue hasta alcanzar un número predefinido de comunidades o hasta la disolución completa de la red.
 
 ### 2.5. Análisis Avanzado
 #### 2.5.1. Análisis de Camino Más Corto
 El análisis de camino más corto constituye una métrica fundamental para evaluar la eficiencia y la fluidez con la que la información o cualquier tipo de interacción se propaga a través de una red. Esta propiedad es central para comprender el fenómeno de "mundo pequeño", donde los nodos están conectados por distancias relativas cortas.
 
-Proceso de Implementación en el Código:
-- Carga de una Muestra del Grafo: Para manejar la escala del conjunto de datos completo, el código inicia cargando una muestra representativa del grafo no ponderado desde la base de datos SQLite. Esta estrategia es esencial para permitir la ejecución de los algoritmos en un tiempo computacionalmente viable.
-- Selección de Nodos Origen: Se selecciona una sub-muestra aleatoria de nodos que servirán como puntos de partida para los cálculos de caminos más cortos, evitando la complejidad de procesar todos los posibles pares de nodos.
-- Ejecución de BFS (Implementación Manual): Por cada nodo origen seleccionado, se ejecuta una implementación manual del algoritmo de Búsqueda en Amplitud (BFS). BFS explora la red capa por capa, garantizando que la primera ruta descubierta hacia cualquier nodo sea la más corta en términos del número de aristas. Durante este proceso, se registran las distancias (número de pasos) desde el nodo origen hasta todos los nodos alcanzables.
-- Cálculo de la Longitud Promedio: Una vez obtenidas las distancias más cortas desde cada nodo origen de la muestra, estas se agregan y se promedian. El resultado es la longitud promedio del camino más corto de la red, una métrica clave que indica la cohesión general y la eficiencia en la conectividad del grafo.
+**Proceso de Implementación en el Código:**
+- **Carga de una Muestra del Grafo:** Para manejar la escala del conjunto de datos completo, el código inicia cargando una muestra representativa del grafo no ponderado desde la base de datos SQLite. Esta estrategia es esencial para permitir la ejecución de los algoritmos en un tiempo computacionalmente viable.
+- **Selección de Nodos Origen:** Se selecciona una sub-muestra aleatoria de nodos que servirán como puntos de partida para los cálculos de caminos más cortos, evitando la complejidad de procesar todos los posibles pares de nodos.
+- **Ejecución de BFS (Implementación Manual):** Por cada nodo origen seleccionado, se ejecuta una implementación manual del algoritmo de Búsqueda en Amplitud (BFS). BFS explora la red capa por capa, garantizando que la primera ruta descubierta hacia cualquier nodo sea la más corta en términos del número de aristas. Durante este proceso, se registran las distancias (número de pasos) desde el nodo origen hasta todos los nodos alcanzables.
+- **Cálculo de la Longitud Promedio:** Una vez obtenidas las distancias más cortas desde cada nodo origen de la muestra, estas se agregan y se promedian. El resultado es la longitud promedio del camino más corto de la red, una métrica clave que indica la cohesión general y la eficiencia en la conectividad del grafo.
 
 #### 2.5.2. Árboles de Expansión Mínima (MST)
 Los Árboles de Expansión Mínima (MST) proporcionan una perspectiva única sobre la conectividad más eficiente dentro de una red ponderada. Un MST es un subgrafo que interconecta todos los nodos de la red utilizando el menor peso total posible de aristas, sin generar ningún ciclo. En el contexto de esta red social, los "pesos" de las aristas corresponden a la distancia geográfica Haversine entre los usuarios, lo que permite transformar un problema de conectividad social en uno de eficiencia espacial.
-Proceso de Implementación en el Código:
-- Carga del Grafo Ponderado: El proceso comienza con la carga de una muestra del grafo desde la base de datos SQLite. Es fundamental que este grafo esté ponderado, es decir, que cada arista entre dos usuarios posea un valor asociado (su peso), que en este caso es la distancia Haversine previamente calculada entre sus coordenadas geográficas.
-- Inicialización del Algoritmo de Prim: La implementación manual del algoritmo de Prim se inicia seleccionando un nodo arbitrario de la muestra y agregándolo al conjunto de nodos que conforman el MST. El resto de los nodos se marcan como "no visitados".
-- Expansión Iterativa del Árbol (Implementación Manual de Prim): El algoritmo de Prim sigue un enfoque voraz (greedy). En cada paso, identifica y selecciona la arista de menor peso que conecta un nodo ya incluido en el MST con un nodo que aún no ha sido visitado. Esta arista se incorpora al MST, y el nuevo nodo se marca como visitado, expandiendo el árbol.
-- Finalización del Proceso: Este procedimiento iterativo continúa hasta que todos los nodos de la muestra inicial han sido incluidos en el MST. El resultado es un subgrafo que representa la conexión de todos los usuarios de la muestra con la distancia geográfica total mínima, ilustrando la "columna vertebral" más eficiente de la conectividad geográficamente determinada de la red.
+**Proceso de Implementación en el Código:**
+- **Carga del Grafo Ponderado:** El proceso comienza con la carga de una muestra del grafo desde la base de datos SQLite. Es fundamental que este grafo esté ponderado, es decir, que cada arista entre dos usuarios posea un valor asociado (su peso), que en este caso es la distancia Haversine previamente calculada entre sus coordenadas geográficas.
+- **Inicialización del Algoritmo de Prim:** La implementación manual del algoritmo de Prim se inicia seleccionando un nodo arbitrario de la muestra y agregándolo al conjunto de nodos que conforman el MST. El resto de los nodos se marcan como "no visitados".
+- **Expansión Iterativa del Árbol (Implementación Manual de Prim):** El algoritmo de Prim sigue un enfoque voraz (greedy). En cada paso, identifica y selecciona la arista de menor peso que conecta un nodo ya incluido en el MST con un nodo que aún no ha sido visitado. Esta arista se incorpora al MST, y el nuevo nodo se marca como visitado, expandiendo el árbol.
+- **Finalización del Proceso:** Este procedimiento iterativo continúa hasta que todos los nodos de la muestra inicial han sido incluidos en el MST. El resultado es un subgrafo que representa la conexión de todos los usuarios de la muestra con la distancia geográfica total mínima, ilustrando la "columna vertebral" más eficiente de la conectividad geográficamente determinada de la red.
 
 ### 2.6. Visualización
 #### 2.6.1. Visualizaciones Interactivas
 Las visualizaciones interactivas son un componente crucial para transformar la complejidad de los datos y los resultados del análisis de grafos en representaciones comprensibles y explorables. Esta capacidad permite una comprensión intuitiva y dinámica de la estructura de la red, superando las limitaciones de los datos tabulares o los gráficos estáticos.
 
-Proceso de Implementación en el Código:
-- Carga de Datos de Ubicación y Conexiones: El código inicia la fase de visualización recuperando las coordenadas de latitud y longitud de una muestra de nodos, junto con la información de sus aristas conectadas, directamente desde la base de datos SQLite. La utilización de una muestra es fundamental para asegurar un rendimiento adecuado en la visualización interactiva.
-- Construcción de la Estructura para Plotly: Aunque la visualización final se realiza con Plotly, se emplea la librería networkx de manera auxiliar para construir un objeto networkx.Graph temporal. Este objeto se popula con los nodos y aristas de la muestra, y se enriquece al adjuntar las coordenadas geográficas (lat y lon) como atributos a cada nodo, lo que simplifica la preparación de los datos para Plotly.
-- Generación de Trazos Geoespaciales (Plotly): Utilizando las capacidades geoespaciales de Plotly, se generan dos tipos principales de "trazos" (go.Scattergeo):
-  - Un trazo para las aristas: representadas como líneas finas (mode='lines') que unen las coordenadas geográficas de los nodos conectados.
-  - Un trazo para los nodos: visualizados como marcadores (mode='markers') posicionados en sus respectivas ubicaciones geográficas.
-- Configuración y Renderización Interactiva: Se configura el diseño del mapa base (incluyendo el alcance global, y los colores de la tierra y los países) para proporcionar un contexto geográfico claro. Finalmente, se construye un objeto go.Figure que integra ambos trazos. Este objeto se convierte a formato HTML interactivo (fig.to_html) y se despliega directamente en el entorno de desarrollo (Google Colab, por ejemplo, mediante IPython.display.HTML). La interactividad inherente de Plotly permite a los usuarios realizar acciones como zoom, desplazamiento y, al posicionar el cursor sobre un nodo o arista, acceder a información detallada (como el ID del usuario), lo que enriquece significativamente la exploración de la densidad de conexiones y la distribución espacial de la red.
+**Proceso de Implementación en el Código:**
+- Carga de Datos de Ubicación y Conexiones:** El código inicia la fase de visualización recuperando las coordenadas de latitud y longitud de una muestra de nodos, junto con la información de sus aristas conectadas, directamente desde la base de datos SQLite. La utilización de una muestra es fundamental para asegurar un rendimiento adecuado en la visualización interactiva.
+- **Construcción de la Estructura para Plotly:** Aunque la visualización final se realiza con Plotly, se emplea la librería networkx de manera auxiliar para construir un objeto networkx.Graph temporal. Este objeto se popula con los nodos y aristas de la muestra, y se enriquece al adjuntar las coordenadas geográficas (lat y lon) como atributos a cada nodo, lo que simplifica la preparación de los datos para Plotly.
+- **Generación de Trazos Geoespaciales (Plotly):** Utilizando las capacidades geoespaciales de Plotly, se generan dos tipos principales de "trazos" (go.Scattergeo):
+  - **Un trazo para las aristas:** representadas como líneas finas (mode='lines') que unen las coordenadas geográficas de los nodos conectados.
+  - **Un trazo para los nodos:** visualizados como marcadores (mode='markers') posicionados en sus respectivas ubicaciones geográficas.
+- **Configuración y Renderización Interactiva:** Se configura el diseño del mapa base (incluyendo el alcance global, y los colores de la tierra y los países) para proporcionar un contexto geográfico claro. Finalmente, se construye un objeto go.Figure que integra ambos trazos. Este objeto se convierte a formato HTML interactivo (fig.to_html) y se despliega directamente en el entorno de desarrollo (Google Colab, por ejemplo, mediante IPython.display.HTML). La interactividad inherente de Plotly permite a los usuarios realizar acciones como zoom, desplazamiento y, al posicionar el cursor sobre un nodo o arista, acceder a información detallada (como el ID del usuario), lo que enriquece significativamente la exploración de la densidad de conexiones y la distribución espacial de la red.
 
 #### 2.6.2. Visualización de Comunidades
 La visualización de comunidades representa una extensión del análisis interactivo, al integrar directamente los resultados de la detección de comunidades sobre el mapa geográfico. Esta integración permite una comprensión visual y espacial de cómo los grupos cohesivos se distribuyen dentro de la red, facilitando la interpretación de las estructuras sociales inherentes.
-Proceso de Implementación en el Código:
-- Carga del Grafo de Muestra: Similar al proceso de visualización general, el código comienza cargando una muestra representativa del grafo desde la base de datos SQLite. Esta muestra debe incluir tanto la información de las conexiones entre nodos como sus coordenadas geográficas.
-- Detección de Comunidades (Louvain para Eficiencia): Para esta fase de visualización, se opta por la función community.community_louvain.best_partition de la librería python-louvain. Esta elección se justifica por la alta eficiencia del algoritmo de Louvain en la detección rápida de comunidades en muestras de grafos grandes, lo cual es fundamental para una visualización fluida y responsiva. Este paso asigna una identificación de comunidad a cada nodo dentro de la muestra.
-- Asignación Dinámica de Colores: Una vez que cada nodo tiene asignada una comunidad, el código procede a utilizar una paleta de colores (por ejemplo, 'viridis' de matplotlib.cm) para generar un color único y distintivo para cada ID de comunidad. Este mapeo de colores asegura que las diferentes comunidades sean fácilmente distinguibles visualmente en el mapa interactivo.
-- Actualización y Renderización del Trazo de Nodos: El trazo de los nodos en Plotly (go.Scattergeo) se actualiza de manera crucial. El atributo marker=dict(color=...) de cada nodo se asigna dinámicamente al color correspondiente a su comunidad. Adicionalmente, se mejora la información emergente (hoverinfo='text') para que, al pasar el cursor sobre un nodo, se visualice no solo el ID del usuario, sino también el ID de la comunidad a la que pertenece. La figura de Plotly, ahora enriquecida con los nodos coloreados por comunidad, se renderiza como un archivo HTML interactivo y se despliega en el entorno. Esta representación visualmente potente permite a los usuarios no solo explorar la red geográficamente, sino también observar de manera inmediata cómo se agrupan los usuarios en distintas comunidades y cómo estas se distribuyen espacialmente, proporcionando una herramienta analítica y comunicativa de gran valor.
+**Proceso de Implementación en el Código:**
+- **Carga del Grafo de Muestra:** Similar al proceso de visualización general, el código comienza cargando una muestra representativa del grafo desde la base de datos SQLite. Esta muestra debe incluir tanto la información de las conexiones entre nodos como sus coordenadas geográficas.
+- **Detección de Comunidades (Louvain para Eficiencia):** Para esta fase de visualización, se opta por la función community.community_louvain.best_partition de la librería python-louvain. Esta elección se justifica por la alta eficiencia del algoritmo de Louvain en la detección rápida de comunidades en muestras de grafos grandes, lo cual es fundamental para una visualización fluida y responsiva. Este paso asigna una identificación de comunidad a cada nodo dentro de la muestra.
+- **Asignación Dinámica de Colores:** Una vez que cada nodo tiene asignada una comunidad, el código procede a utilizar una paleta de colores (por ejemplo, 'viridis' de matplotlib.cm) para generar un color único y distintivo para cada ID de comunidad. Este mapeo de colores asegura que las diferentes comunidades sean fácilmente distinguibles visualmente en el mapa interactivo.
+- **Actualización y Renderización del Trazo de Nodos:** El trazo de los nodos en Plotly (go.Scattergeo) se actualiza de manera crucial. El atributo marker=dict(color=...) de cada nodo se asigna dinámicamente al color correspondiente a su comunidad. Adicionalmente, se mejora la información emergente (hoverinfo='text') para que, al pasar el cursor sobre un nodo, se visualice no solo el ID del usuario, sino también el ID de la comunidad a la que pertenece. La figura de Plotly, ahora enriquecida con los nodos coloreados por comunidad, se renderiza como un archivo HTML interactivo y se despliega en el entorno. Esta representación visualmente potente permite a los usuarios no solo explorar la red geográficamente, sino también observar de manera inmediata cómo se agrupan los usuarios en distintas comunidades y cómo estas se distribuyen espacialmente, proporcionando una herramienta analítica y comunicativa de gran valor.
 
 ### 2.7. Conclusión
 #### Resumen de hallazgos:
