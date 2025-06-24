@@ -213,7 +213,7 @@ Usa os.path.join para combinar la carpeta y el nombre del archivo para obtener l
 - Se eliminan los espacios en blanco de la línea y se divide en una lista de cadenas, asumiendo que las conexiones están separadas por comas.
 - Se convierte cada cadena a un entero usando map y int
 - Se calcula el ID del usuario actual (idx) como total_users + 1.
-**Se filtran las conexiones:**
+- **Se filtran las conexiones:**
 - Se eliminan las conexiones que no son positivas, que son mayores que max_id, o que son iguales al propio ID del usuario.
 - Se convierte el resultado a un conjunto (para eliminar duplicados) y luego a una lista.
 - Se trunca la lista de conexiones a max_connections_per_user conexiones.
@@ -222,7 +222,7 @@ Usa os.path.join para combinar la carpeta y el nombre del archivo para obtener l
 
 ##### Guardar chunks de usuarios:
 Dentro del bucle que procesa las líneas, se verifica si el número de usuarios procesados (total_users) es un múltiplo del tamaño del chunk (chunksize).
-**Si es un múltiplo de chunksize:**
+- **Si es un múltiplo de chunksize:**
 - Se construye la ruta del archivo de salida para el chunk actual.
 - Se abre un archivo en modo escritura binaria ('wb').
 - Se serializa el diccionario user_dict usando pickle.dump y se guarda en el archivo.
@@ -264,14 +264,14 @@ Se lleva acabo la construcción del grafo, su visualización básica y datos de 
 
 #### Construir_grafo_desde_chunks_con_disco:
 - **Propósito:** Construye un grafo desde archivos de "chunk" que contienen datos de usuarios y los guarda en una base de datos SQLite.
-**Cómo funciona:**
+- **Cómo funciona:**
 - Crea una conexión a una base de datos SQLite.
 - Crea tablas para almacenar nodos (usuarios) y aristas (conexiones).
 - Obtiene una lista de archivos "chunk".
 - Itera a través de cada archivo "chunk":
 - Carga el "chunk" usando pickle.load().
 - Itera a través de los usuarios y sus conexiones en el "chunk":
-**Si el usuario tiene información de ubicación:**
+- **Si el usuario tiene información de ubicación:**
 - Inserta el usuario en la tabla de nodos (si no existe).
 - Itera a través de las conexiones del usuario:
 - Si el amigo también tiene ubicación, inserta la conexión como una arista en la tabla de aristas.
@@ -280,7 +280,7 @@ Se lleva acabo la construcción del grafo, su visualización básica y datos de 
 
 #### Dibujar_muestra_grafo_desde_db:
 - **Propósito:** Dibuja una muestra del grafo desde la base de datos SQLite.
-**Cómo funciona:**
+- **Cómo funciona:**
 - Establece una conexión a la base de datos SQLite.
 - Obtiene una muestra de nodos (usuarios) de la tabla de nodos.
 - Crea un grafo dirigido usando networkx.
@@ -292,7 +292,7 @@ Se lleva acabo la construcción del grafo, su visualización básica y datos de 
 
 #### Mostrar_grafo_desde_sqlite:
 - **Propósito:** Muestra los primeros 100 nodos y las primeras 1000 aristas de la base de datos SQLite.
-**Cómo funciona:**
+- **Cómo funciona:**
 - Se conecta a la base de datos SQLite.
 - Ejecuta consultas para seleccionar los primeros 100 nodos y las primeras 1000 aristas.
 - Imprime los resultados en un formato legible.
@@ -300,7 +300,7 @@ Se lleva acabo la construcción del grafo, su visualización básica y datos de 
 
 #### Estadisticas_basicas:
 - **Propósito:** Calcula y muestra estadísticas básicas del grafo almacenado en la base de datos SQLite.
-**Cómo funciona:**
+- **Cómo funciona:**
 - Se conecta a la base de datos SQLite.
 - Calcula el número de nodos y aristas usando consultas SQL.
 - Calcula el grado promedio y la densidad del grafo.
@@ -311,7 +311,7 @@ Se lleva acabo la construcción del grafo, su visualización básica y datos de 
 #### 2.4.1. Detección de Comunidades
 La detección de comunidades es un pilar fundamental en el análisis de redes, pues permite identificar grupos de nodos (usuarios en tu caso) que están más densamente conectados entre sí que con el resto de la red. Estos grupos cohesivos, o comunidades, suelen revelar estructuras sociales, geográficas o temáticas subyacentes, proporcionando una comprensión más profunda de la organización interna de la red.
 
-**Cómo se hace en el código:**
+- **Cómo se hace en el código:**
 - **Algoritmo de Girvan-Newman (Implementación Manual):** Este proyecto empleó una implementación manual del algoritmo de Girvan-Newman, un método iterativo que se basa en la centralidad de intermediación.
 - **Cálculo Iterativo de Centralidad de Intermediación:** En cada iteración, el código determina la centralidad de intermediación para todas las aristas del grafo. Esta métrica cuantifica el grado en que una arista actúa como un puente fundamental en los caminos más cortos entre pares de nodos.
 - **Remoción de Aristas Clave:** La arista con el valor más elevado de centralidad de intermediación es sistemáticamente identificada y eliminada del grafo, ya que representa un enlace crítico entre potenciales comunidades.
@@ -321,7 +321,7 @@ La detección de comunidades es un pilar fundamental en el análisis de redes, p
 #### 2.5.1. Análisis de Camino Más Corto
 El análisis de camino más corto constituye una métrica fundamental para evaluar la eficiencia y la fluidez con la que la información o cualquier tipo de interacción se propaga a través de una red. Esta propiedad es central para comprender el fenómeno de "mundo pequeño", donde los nodos están conectados por distancias relativas cortas.
 
-**Proceso de Implementación en el Código:**
+- **Proceso de Implementación en el Código:**
 - **Carga de una Muestra del Grafo:** Para manejar la escala del conjunto de datos completo, el código inicia cargando una muestra representativa del grafo no ponderado desde la base de datos SQLite. Esta estrategia es esencial para permitir la ejecución de los algoritmos en un tiempo computacionalmente viable.
 - **Selección de Nodos Origen:** Se selecciona una sub-muestra aleatoria de nodos que servirán como puntos de partida para los cálculos de caminos más cortos, evitando la complejidad de procesar todos los posibles pares de nodos.
 - **Ejecución de BFS (Implementación Manual):** Por cada nodo origen seleccionado, se ejecuta una implementación manual del algoritmo de Búsqueda en Amplitud (BFS). BFS explora la red capa por capa, garantizando que la primera ruta descubierta hacia cualquier nodo sea la más corta en términos del número de aristas. Durante este proceso, se registran las distancias (número de pasos) desde el nodo origen hasta todos los nodos alcanzables.
@@ -329,7 +329,7 @@ El análisis de camino más corto constituye una métrica fundamental para evalu
 
 #### 2.5.2. Árboles de Expansión Mínima (MST)
 Los Árboles de Expansión Mínima (MST) proporcionan una perspectiva única sobre la conectividad más eficiente dentro de una red ponderada. Un MST es un subgrafo que interconecta todos los nodos de la red utilizando el menor peso total posible de aristas, sin generar ningún ciclo. En el contexto de esta red social, los "pesos" de las aristas corresponden a la distancia geográfica Haversine entre los usuarios, lo que permite transformar un problema de conectividad social en uno de eficiencia espacial.
-**Proceso de Implementación en el Código:**
+- **Proceso de Implementación en el Código:**
 - **Carga del Grafo Ponderado:** El proceso comienza con la carga de una muestra del grafo desde la base de datos SQLite. Es fundamental que este grafo esté ponderado, es decir, que cada arista entre dos usuarios posea un valor asociado (su peso), que en este caso es la distancia Haversine previamente calculada entre sus coordenadas geográficas.
 - **Inicialización del Algoritmo de Prim:** La implementación manual del algoritmo de Prim se inicia seleccionando un nodo arbitrario de la muestra y agregándolo al conjunto de nodos que conforman el MST. El resto de los nodos se marcan como "no visitados".
 - **Expansión Iterativa del Árbol (Implementación Manual de Prim):** El algoritmo de Prim sigue un enfoque voraz (greedy). En cada paso, identifica y selecciona la arista de menor peso que conecta un nodo ya incluido en el MST con un nodo que aún no ha sido visitado. Esta arista se incorpora al MST, y el nuevo nodo se marca como visitado, expandiendo el árbol.
@@ -339,7 +339,7 @@ Los Árboles de Expansión Mínima (MST) proporcionan una perspectiva única sob
 #### 2.6.1. Visualizaciones Interactivas
 Las visualizaciones interactivas son un componente crucial para transformar la complejidad de los datos y los resultados del análisis de grafos en representaciones comprensibles y explorables. Esta capacidad permite una comprensión intuitiva y dinámica de la estructura de la red, superando las limitaciones de los datos tabulares o los gráficos estáticos.
 
-**Proceso de Implementación en el Código:**
+- **Proceso de Implementación en el Código:**
 - Carga de Datos de Ubicación y Conexiones:** El código inicia la fase de visualización recuperando las coordenadas de latitud y longitud de una muestra de nodos, junto con la información de sus aristas conectadas, directamente desde la base de datos SQLite. La utilización de una muestra es fundamental para asegurar un rendimiento adecuado en la visualización interactiva.
 - **Construcción de la Estructura para Plotly:** Aunque la visualización final se realiza con Plotly, se emplea la librería networkx de manera auxiliar para construir un objeto networkx.Graph temporal. Este objeto se popula con los nodos y aristas de la muestra, y se enriquece al adjuntar las coordenadas geográficas (lat y lon) como atributos a cada nodo, lo que simplifica la preparación de los datos para Plotly.
 - **Generación de Trazos Geoespaciales (Plotly):** Utilizando las capacidades geoespaciales de Plotly, se generan dos tipos principales de "trazos" (go.Scattergeo):
@@ -349,7 +349,7 @@ Las visualizaciones interactivas son un componente crucial para transformar la c
 
 #### 2.6.2. Visualización de Comunidades
 La visualización de comunidades representa una extensión del análisis interactivo, al integrar directamente los resultados de la detección de comunidades sobre el mapa geográfico. Esta integración permite una comprensión visual y espacial de cómo los grupos cohesivos se distribuyen dentro de la red, facilitando la interpretación de las estructuras sociales inherentes.
-**Proceso de Implementación en el Código:**
+- **Proceso de Implementación en el Código:**
 - **Carga del Grafo de Muestra:** Similar al proceso de visualización general, el código comienza cargando una muestra representativa del grafo desde la base de datos SQLite. Esta muestra debe incluir tanto la información de las conexiones entre nodos como sus coordenadas geográficas.
 - **Detección de Comunidades (Louvain para Eficiencia):** Para esta fase de visualización, se opta por la función community.community_louvain.best_partition de la librería python-louvain. Esta elección se justifica por la alta eficiencia del algoritmo de Louvain en la detección rápida de comunidades en muestras de grafos grandes, lo cual es fundamental para una visualización fluida y responsiva. Este paso asigna una identificación de comunidad a cada nodo dentro de la muestra.
 - **Asignación Dinámica de Colores:** Una vez que cada nodo tiene asignada una comunidad, el código procede a utilizar una paleta de colores (por ejemplo, 'viridis' de matplotlib.cm) para generar un color único y distintivo para cada ID de comunidad. Este mapeo de colores asegura que las diferentes comunidades sean fácilmente distinguibles visualmente en el mapa interactivo.
