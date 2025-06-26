@@ -84,7 +84,7 @@ Este proyecto analiza y visualiza el grafo de la red social 'X' a partir de un c
 - **networkx:** Crea, manipula y analiza grafos y redes complejas en Python. Ofrece herramientas para modelar relaciones y estudiar sus propiedades. Fundamental para el análisis de redes de diversos tipos.
 - **matplotlib.pyplot:** Módulo para crear visualizaciones estáticas, interactivas y animadas en Python. Genera gráficos de líneas, barras, dispersión y más. Herramienta clave para la exploración y presentación visual de datos.
 - **IPython.display (importando display y HTML):** Para mostrar contenido HTML (las visualizaciones de Plotly) directamente en entornos como Jupyter Notebooks o Google Colab.
-- **community (específicamente community.community_louvain importado como co):** Una librería para la detección de comunidades en grafos, implementando el algoritmo de Louvain.
+- **community (específicamente community.community_louvain importado como co):** Una librería para la detección de comunidades en grafos, implementando el algoritmo de Louvain para la visualización.
 ## 2. Procesamiento de datos
 ### 2.1. 10 millones location_data
 #### import os:
